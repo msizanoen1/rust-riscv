@@ -1,0 +1,17 @@
+[workspace]
+members = [
+    "src/libcore",
+    "src/liballoc",
+    "src/libstd",
+    "src/libtest"
+]
+
+[patch.crates-io]
+libc = { git = "https://github.com/msizanoen1/libc.git", branch = "riscv" }
+rustc-std-workspace-core = { path = "src/tools/rustc-std-workspace-core" }
+rustc-std-workspace-alloc = { path = "src/tools/rustc-std-workspace-alloc" }
+rustc-std-workspace-std = { path = "src/tools/rustc-std-workspace-std" }
+
+[profile.release]
+codegen-units = 1
+debug = 1
