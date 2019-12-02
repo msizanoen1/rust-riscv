@@ -13,10 +13,10 @@ index 4f572fe21b3..5eaacc0c90b 100644
  // https://github.com/gcc-mirror/gcc/blob/master/libstdc++-v3/libsupc++/eh_personality.cc
  // https://github.com/gcc-mirror/gcc/blob/trunk/libgcc/unwind-c.c
 diff --git a/src/libstd/env.rs b/src/libstd/env.rs
-index b8989369269..03984d979b4 100644
+index cf71b61b917..b5867e40002 100644
 --- a/src/libstd/env.rs
 +++ b/src/libstd/env.rs
-@@ -992,6 +992,11 @@ mod arch {
+@@ -1033,6 +1033,11 @@ mod arch {
      pub const ARCH: &'static str = "hexagon";
  }
  
@@ -29,45 +29,49 @@ index b8989369269..03984d979b4 100644
  mod tests {
      use super::*;
 diff --git a/src/libstd/os/linux/raw.rs b/src/libstd/os/linux/raw.rs
-index 21e1cf8a22b..42432babeac 100644
+index d9b2236047b..0caec97bb7b 100644
 --- a/src/libstd/os/linux/raw.rs
 +++ b/src/libstd/os/linux/raw.rs
-@@ -205,7 +205,8 @@ mod arch {
+@@ -230,7 +230,12 @@ mod arch {
+     }
+ }
  
- #[cfg(any(target_arch = "mips64",
-           target_arch = "s390x",
--          target_arch = "sparc64"))]
-+          target_arch = "sparc64",
-+          target_arch = "riscv64"))]
+-#[cfg(any(target_arch = "mips64", target_arch = "s390x", target_arch = "sparc64"))]
++#[cfg(any(
++    target_arch = "mips64",
++    target_arch = "s390x",
++    target_arch = "sparc64",
++    target_arch = "riscv64"
++))]
  mod arch {
-     pub use libc::{off_t, ino_t, nlink_t, blksize_t, blkcnt_t, stat, time_t};
+     pub use libc::{blkcnt_t, blksize_t, ino_t, nlink_t, off_t, stat, time_t};
  }
 diff --git a/src/libstd/os/raw/mod.rs b/src/libstd/os/raw/mod.rs
-index 611a1709c8d..46ccf209aab 100644
+index e09012007f2..47daf0cce1b 100644
 --- a/src/libstd/os/raw/mod.rs
 +++ b/src/libstd/os/raw/mod.rs
-@@ -14,7 +14,8 @@
-                                        target_arch = "hexagon",
-                                        target_arch = "powerpc",
-                                        target_arch = "powerpc64",
--                                       target_arch = "s390x")),
-+                                       target_arch = "s390x",
-+                                       target_arch = "riscv64")),
-           all(target_os = "android", any(target_arch = "aarch64",
-                                          target_arch = "arm")),
-           all(target_os = "l4re", target_arch = "x86_64"),
-@@ -38,7 +39,8 @@
-                                            target_arch = "hexagon",
-                                            target_arch = "powerpc",
-                                            target_arch = "powerpc64",
--                                           target_arch = "s390x")),
-+                                           target_arch = "s390x",
-+                                           target_arch = "riscv64")),
-               all(target_os = "android", any(target_arch = "aarch64",
-                                              target_arch = "arm")),
-               all(target_os = "l4re", target_arch = "x86_64"),
+@@ -18,7 +18,8 @@
+             target_arch = "hexagon",
+             target_arch = "powerpc",
+             target_arch = "powerpc64",
+-            target_arch = "s390x"
++            target_arch = "s390x",
++            target_arch = "riscv64"
+         )
+     ),
+     all(target_os = "android", any(target_arch = "aarch64", target_arch = "arm")),
+@@ -60,7 +61,8 @@ pub type c_char = u8;
+             target_arch = "hexagon",
+             target_arch = "powerpc",
+             target_arch = "powerpc64",
+-            target_arch = "s390x"
++            target_arch = "s390x",
++            target_arch = "riscv64"
+         )
+     ),
+     all(target_os = "android", any(target_arch = "aarch64", target_arch = "arm")),
 diff --git a/src/libstd/sys/unix/fs.rs b/src/libstd/sys/unix/fs.rs
-index cbf751bec95..202d117d8e3 100644
+index 8669c48e3bb..08fb088c861 100644
 --- a/src/libstd/sys/unix/fs.rs
 +++ b/src/libstd/sys/unix/fs.rs
 @@ -57,6 +57,7 @@ macro_rules! cfg_has_statx {
@@ -87,19 +91,19 @@ index cbf751bec95..202d117d8e3 100644
          {
              $($block_inner)*
 diff --git a/src/libstd/sys_common/alloc.rs b/src/libstd/sys_common/alloc.rs
-index 1cfc7ed17f2..fd14d02ffa7 100644
+index 713b9949f64..c6694100785 100644
 --- a/src/libstd/sys_common/alloc.rs
 +++ b/src/libstd/sys_common/alloc.rs
-@@ -19,7 +19,8 @@ pub const MIN_ALIGN: usize = 8;
-               target_arch = "aarch64",
-               target_arch = "mips64",
-               target_arch = "s390x",
--              target_arch = "sparc64")))]
-+              target_arch = "sparc64",
-+              target_arch = "riscv64")))]
+@@ -22,7 +22,8 @@ pub const MIN_ALIGN: usize = 8;
+     target_arch = "aarch64",
+     target_arch = "mips64",
+     target_arch = "s390x",
+-    target_arch = "sparc64"
++    target_arch = "sparc64",
++    target_arch = "riscv64"
+ )))]
  pub const MIN_ALIGN: usize = 16;
  
- pub unsafe fn realloc_fallback(
 diff --git a/src/libunwind/libunwind.rs b/src/libunwind/libunwind.rs
 index 0b39503c0d0..4867a0f7f92 100644
 --- a/src/libunwind/libunwind.rs
