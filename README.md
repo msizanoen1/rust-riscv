@@ -1,3 +1,4 @@
+# DEPRECATED - SUPPORT IS NOW UPSTREAM
 # rust-riscv
 A set of script and patches to build the Rust standard library for RISC-V on GNU/Linux.
 This should no longer be necessary when RISC-V support for GNU/Linux is upstreamed.
